@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+		"name": "MBD Sistem Tiket Konser",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. Auth - Register Pembeli Baru",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"user_baru\",\n    \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/auth/register",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "auth", "register"]
+				}
+			}
+		},
+		{
+			"name": "1. Auth - Login Pembeli",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token_pembeli\", jsonData.accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"rehan\",\n    \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/auth/login",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "auth", "login"]
+				}
+			}
+		},
+		{
+			"name": "2. Auth - Login Petugas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token_petugas\", jsonData.accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/auth/login",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "auth", "login"]
+				}
+			}
+		},
+		{
+			"name": "3. Konser - Lihat Tersedia",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/konser/tersedia",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "konser", "tersedia"]
+				}
+			}
+		},
+		{
+			"name": "4. Pesanan - Buat Pesanan Tiket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_pembeli}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"konserId\": 1,\n    \"jumlahTiket\": 2\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/pesanan",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "pesanan"]
+				}
+			}
+		},
+		{
+			"name": "5. Pembeli - Lihat Pesanan Saya (Cek ID & Tagihan)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_pembeli}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/pesanan/saya",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "pesanan", "saya"]
+				}
+			}
+		},
+		{
+			"name": "6. Pesanan - Bayar Pesanan",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_pembeli}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pesananId\": 1,\n    \"jumlahBayar\": 1000000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/pesanan/bayar",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "pesanan", "bayar"]
+				}
+			}
+		},
+		{
+			"name": "7. Pesanan - Batalkan Tiket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_pembeli}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tiketId\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/pesanan/batal-tiket",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "pesanan", "batal-tiket"]
+				}
+			}
+		},
+		{
+			"name": "8. Petugas - Lihat Riwayat Pesanan",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_petugas}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/pesanan/riwayat",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["api", "v1", "pesanan", "riwayat"]
+				}
+			}
+		}
+	]
+}
